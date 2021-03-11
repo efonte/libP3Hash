@@ -5,9 +5,6 @@
 
 using namespace std;
 
-///magic values
-uint32_t _0x8A7 = 0x8A70000;
-
 ///simulation values
 uint32_t v1;
 uint32_t a0;
@@ -242,14 +239,14 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
 
     a2 = magicTable[0x100 / 4];
     v1 = _a1_0x0;
-    t0 = _0x8A7;
-    a3 = _0x8A7;
+    t0 = 0x8A70000;
+    a3 = 0x8A70000;
     v1 = v1 ^ a2;
     _a1_0x0 = v1;
     t2 = magicTable[0x104 / 4];
     t1 = _a1_0x4;
-    a2 = _0x8A7;
-    v1 = _0x8A7;
+    a2 = 0x8A70000;
+    v1 = 0x8A70000;
     t4 = t1 ^ t2;
     t1 = t4 & 0xFF;
     t0 = t0 + -0x5D44;
