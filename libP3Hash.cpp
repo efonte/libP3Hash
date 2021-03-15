@@ -229,14 +229,15 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     uint32_t t4;
     uint32_t t5;
     uint32_t t6;
+    uint32_t offset = 3;
 
-    a2 = magicTable[0x0 / 4];
+    a2 = magicTable[0];
     v1 = _a1_0x0;
     t0 = 0x8A70000;
     a3 = 0x8A70000;
     v1 = v1 ^ a2;
     _a1_0x0 = v1;
-    t2 = magicTable[0x4 / 4];
+    t2 = magicTable[1];
     t1 = _a1_0x4;
     a2 = 0x8A70000;
     v1 = 0x8A70000;
@@ -265,7 +266,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x10 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -285,7 +286,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x14 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -319,7 +320,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x18 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -339,7 +340,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x1C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -373,7 +374,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x20 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -393,7 +394,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x24 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -427,7 +428,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x28 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -447,7 +448,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x2C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -481,7 +482,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x30 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -501,7 +502,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x34 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -535,7 +536,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x38 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -555,7 +556,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x3C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -570,7 +571,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = _a1_0x4;
     t3 = t1 ^ t2;
     _a1_0x4 = t3;
-    t2 = magicTable[0x40 / 4];
+    t2 = magicTable[++offset];
     t1 = _a1_0x0;
     t1 = t2 & t1;
     t2 = t1 << 0x1;
@@ -578,18 +579,19 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = t2 + t1;
     t3 = t3 ^ t1;
     _a1_0x4 = t3;
-    t2 = magicTable[0x44 / 4];
+    t2 = magicTable[++offset];
     t1 = _a1_0x0;
     t2 = t2 | t3;
     t1 = t1 ^ t2;
     _a1_0x0 = t1;
-    t3 = magicTable[0x4C / 4];
+    t3 = magicTable[offset + 2];
     t2 = _a1_0xC;
     t1 = _a1_0x8;
     t2 = t3 | t2;
     t3 = t1 ^ t2;
     _a1_0x8 = t3;
-    t2 = magicTable[0x48 / 4];
+    t2 = magicTable[offset + 1];
+    offset = offset + 2;
     t1 = _a1_0xC;
     t2 = t2 & t3;
     t3 = t2 << 0x1;
@@ -599,7 +601,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     _a1_0xC = t1;
     t5 = _a1_0x4;
     t6 = _a1_0x0;
-    t4 = magicTable[0x50 / 4];
+    t4 = magicTable[++offset];
     t1 = t5 & 0xFF;
     t1 = t1 << 0x2;
     t1 = t0 + t1;
@@ -637,7 +639,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x54 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -671,7 +673,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x58 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -691,7 +693,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x5C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -725,7 +727,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x60 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -745,7 +747,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x64 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -779,7 +781,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x68 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -799,7 +801,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x6C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -833,7 +835,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x70 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -853,7 +855,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x74 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -887,7 +889,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x78 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -907,7 +909,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x7C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -922,7 +924,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = _a1_0x4;
     t3 = t1 ^ t2;
     _a1_0x4 = t3;
-    t2 = magicTable[0x80 / 4];
+    t2 = magicTable[++offset];
     t1 = _a1_0x0;
     t1 = t2 & t1;
     t2 = t1 << 0x1;
@@ -930,18 +932,19 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = t2 + t1;
     t3 = t3 ^ t1;
     _a1_0x4 = t3;
-    t2 = magicTable[0x84 / 4];
+    t2 = magicTable[++offset];
     t1 = _a1_0x0;
     t2 = t2 | t3;
     t1 = t1 ^ t2;
     _a1_0x0 = t1;
-    t3 = magicTable[0x8C / 4];
+    t3 = magicTable[offset + 2];
     t2 = _a1_0xC;
     t1 = _a1_0x8;
     t2 = t3 | t2;
     t3 = t1 ^ t2;
     _a1_0x8 = t3;
-    t2 = magicTable[0x88 / 4];
+    t2 = magicTable[offset + 1];
+    offset = offset + 2;
     t1 = _a1_0xC;
     t2 = t2 & t3;
     t3 = t2 << 0x1;
@@ -951,7 +954,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     _a1_0xC = t1;
     t5 = _a1_0x4;
     t6 = _a1_0x0;
-    t4 = magicTable[0x90 / 4];
+    t4 = magicTable[++offset];
     t1 = t5 & 0xFF;
     t1 = t1 << 0x2;
     t1 = t0 + t1;
@@ -989,7 +992,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x94 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -1023,7 +1026,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0x98 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1043,7 +1046,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0x9C / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -1077,7 +1080,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xA0 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1097,7 +1100,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xA4 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -1131,7 +1134,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xA8 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1151,7 +1154,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xAC / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -1185,7 +1188,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xB0 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1205,7 +1208,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xB4 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -1239,7 +1242,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xB8 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1259,7 +1262,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xBC / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -1274,7 +1277,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = _a1_0x4;
     t3 = t1 ^ t2;
     _a1_0x4 = t3;
-    t2 = magicTable[0xC0 / 4];
+    t2 = magicTable[++offset];
     t1 = _a1_0x0;
     t1 = t2 & t1;
     t2 = t1 << 0x1;
@@ -1282,18 +1285,19 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = t2 + t1;
     t3 = t3 ^ t1;
     _a1_0x4 = t3;
-    t2 = magicTable[0xC4 / 4];
+    t2 = magicTable[++offset];
     t1 = _a1_0x0;
     t2 = t2 | t3;
     t1 = t1 ^ t2;
     _a1_0x0 = t1;
-    t3 = magicTable[0xCC / 4];
+    t3 = magicTable[offset + 2];
     t2 = _a1_0xC;
     t1 = _a1_0x8;
     t2 = t3 | t2;
     t3 = t1 ^ t2;
     _a1_0x8 = t3;
-    t2 = magicTable[0xC8 / 4];
+    t2 = magicTable[offset + 1];
+    offset = offset + 2;
     t1 = _a1_0xC;
     t2 = t2 & t3;
     t3 = t2 << 0x1;
@@ -1303,7 +1307,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     _a1_0xC = t1;
     t5 = _a1_0x4;
     t6 = _a1_0x0;
-    t4 = magicTable[0xD0 / 4];
+    t4 = magicTable[++offset];
     t1 = t5 & 0xFF;
     t1 = t1 << 0x2;
     t1 = t0 + t1;
@@ -1341,7 +1345,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xD4 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -1375,7 +1379,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xD8 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1395,7 +1399,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xDC / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -1429,7 +1433,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xE0 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1449,7 +1453,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xE4 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -1483,7 +1487,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xE8 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1503,7 +1507,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xEC / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
@@ -1537,7 +1541,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t1 = v1 + t1;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t2 = t2 ^ t3;
-    t4 = magicTable[0xF0 / 4];
+    t4 = magicTable[++offset];
     t1 = t1 ^ t2;
     t2 = (t6 >> 0x18) & ((1 << 0x8) - 1);
     t2 = t2 << 0x2;
@@ -1557,7 +1561,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = t3 ^ t5;
     t2 = v1 + t2;
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4];
-    t3 = magicTable[0xF4 / 4];
+    t3 = magicTable[++offset];
     t5 = t5 ^ t6;
     t2 = _a1_0x8;
     t4 = t5 ^ t4;
@@ -1591,7 +1595,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t3 = t2 ^ t3;
     t1 = hashTable[(t1 - 0x8A6A2BB) / 4];
     t4 = _a1_0x8;
-    t2 = magicTable[0xF8 / 4];
+    t2 = magicTable[++offset];
     t1 = t1 ^ t3;
     t3 = (t4 >> 0x18) & ((1 << 0x8) - 1);
     t3 = t3 << 0x2;
@@ -1611,7 +1615,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     v1 = v1 + a2;
     t0 = a3 ^ t0;
     a3 = hashTable[(v1 - 0x8A6A2BB) / 4];
-    a2 = magicTable[0xFC / 4];
+    a2 = magicTable[++offset];
     a3 = a3 ^ t0;
     v1 = _a1_0x0;
     t0 = a3 ^ t2;
@@ -1626,11 +1630,11 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     v1 = _a1_0x4;
     v1 = v1 ^ a2;
     _a1_0x4 = v1;
-    a2 = magicTable[0x100 / 4];
+    a2 = magicTable[++offset];
     v1 = _a1_0x8;
     v1 = v1 ^ a2;
     _a1_0x8 = v1;
-    a0 = magicTable[0x104 / 4];
+    a0 = magicTable[++offset];
     v1 = _a1_0xC;
     v1 = v1 ^ a0;
     _a1_0xC = v1;
