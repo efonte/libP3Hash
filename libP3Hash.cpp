@@ -212,8 +212,8 @@ T swap_endian(T u)
 
 std::pair<uint32_t, uint32_t> aaa(uint32_t var1, uint32_t var2)
 {
-    uint32_t t4 = (hashTable[0x300 + (var1 & 0xFF)] ^ (hashTable[0x200 + ((var1 / 0x100) & 0xFF)] ^ (hashTable[(var1 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((var1 / 0x10000) & 0xFF)])));
-    uint32_t t1 = (hashTable[0x300 + ((var2 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((var2 / 0x10000) & 0xFF)] ^ (hashTable[var2 & 0xFF] ^ hashTable[0x100 + ((var2 / 0x1000000) & 0xFF)])));
+    uint32_t t4 = hashTable[0x300 + (var1 & 0xFF)] ^ (hashTable[0x200 + ((var1 / 0x100) & 0xFF)] ^ (hashTable[(var1 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((var1 / 0x10000) & 0xFF)]));
+    uint32_t t1 = hashTable[0x300 + ((var2 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((var2 / 0x10000) & 0xFF)] ^ (hashTable[var2 & 0xFF] ^ hashTable[0x100 + ((var2 / 0x1000000) & 0xFF)]));
     return std::make_pair(t4, t1);
 }
 
@@ -298,7 +298,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b0, b4);
     t4 = result.first ^ magicTable[0x26];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x27];
+    t1 = result.second ^ magicTable[0x27];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
@@ -323,7 +323,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b0, b4);
     t4 = result.first ^ magicTable[0x1A];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x1B];
+    t1 = result.second ^ magicTable[0x1B];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
@@ -335,7 +335,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b0, b4);
     t4 = result.first ^ magicTable[0x16];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x17];
+    t1 = result.second ^ magicTable[0x17];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
