@@ -223,11 +223,6 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     uint32_t b4 = swap_endian<uint32_t>(block[1]);
     uint32_t b8 = swap_endian<uint32_t>(block[2]);
     uint32_t bc = swap_endian<uint32_t>(block[3]);
-    // cout << block[0] << " " << b0 << endl;
-    // cout << block[1] << " " << b4 << endl;
-    // cout << block[2] << " " << b8 << endl;
-    // cout << block[3] << " " << bc << endl;
-    // exit(1);
 
     uint32_t t4;
     uint32_t t1;
@@ -240,7 +235,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     t1 = result.first ^ magicTable[--offset];
     t4 = result.second ^ magicTable[--offset];
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
     {
         bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
         b8 = b8 ^ (t1 ^ t4);
@@ -272,50 +267,23 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
         t1 = result.first ^ magicTable[--offset];
         t4 = result.second ^ magicTable[--offset];
 
-        b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) / 0x80000000));
-        b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[offset - 1] | b4);
-        offset = offset - 2;
-        b8 = b8 ^ (magicTable[--offset] | bc);
-        offset = offset - 1;
-        bc = bc ^ (((magicTable[offset] & b8) * 0x2) + ((magicTable[offset] & b8) / 0x80000000));
-        t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)])) ^ magicTable[--offset];
-        t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[--offset];
+        if (i != 3)
+        {
+            b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) / 0x80000000));
+            b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[offset - 1] | b4);
+            offset = offset - 2;
+            b8 = b8 ^ (magicTable[--offset] | bc);
+            offset = offset - 1;
+            bc = bc ^ (((magicTable[offset] & b8) * 0x2) + ((magicTable[offset] & b8) / 0x80000000));
+            t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)])) ^ magicTable[--offset];
+            t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[--offset];
+        }
     }
-
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    b8 = b8 ^ (t1 ^ t4);
-    result = aaa(bc, b8);
-    t1 = result.first ^ magicTable[0xD];
-    t4 = result.second ^ magicTable[0xC];
-
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    b0 = b0 ^ (t1 ^ t4);
-    result = aaa(b4, b0);
-    t1 = result.first ^ magicTable[0xB];
-    t4 = result.second ^ magicTable[0xA];
-
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    b8 = b8 ^ (t1 ^ t4);
-    result = aaa(bc, b8);
-    t1 = result.first ^ magicTable[0x9];
-    t4 = result.second ^ magicTable[0x8];
-
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    b0 = b0 ^ (t1 ^ t4);
-    result = aaa(b4, b0);
-    t1 = result.first ^ magicTable[0x7];
-    t4 = result.second ^ magicTable[0x6];
-
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    b8 = b8 ^ (t1 ^ t4);
-    result = aaa(bc, b8);
-    t1 = result.first;
-    t4 = result.second ^ magicTable[0x4];
 
     uint32_t a = b8 ^ magicTable[0x0];
     uint32_t b = bc ^ magicTable[0x1];
-    uint32_t c = b0 ^ ((t1 ^ magicTable[0x5]) ^ t4);
-    uint32_t d = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ ((t1 ^ magicTable[0x5]) ^ t4));
+    uint32_t c = b0 ^ (t1 ^ t4);
+    uint32_t d = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
 
     a = swap_endian<uint32_t>(a);
     b = swap_endian<uint32_t>(b);
