@@ -212,9 +212,9 @@ T swap_endian(T u)
 
 std::pair<uint32_t, uint32_t> aaa(uint32_t var1, uint32_t var2)
 {
-    uint32_t t4 = hashTable[0x300 + (var1 & 0xFF)] ^ (hashTable[0x200 + ((var1 / 0x100) & 0xFF)] ^ (hashTable[(var1 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((var1 / 0x10000) & 0xFF)]));
-    uint32_t t1 = hashTable[0x300 + ((var2 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((var2 / 0x10000) & 0xFF)] ^ (hashTable[var2 & 0xFF] ^ hashTable[0x100 + ((var2 / 0x1000000) & 0xFF)]));
-    return std::make_pair(t4, t1);
+    uint32_t t1 = hashTable[0x300 + ((var1 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((var1 / 0x10000) & 0xFF)] ^ (hashTable[var1 & 0xFF] ^ hashTable[0x100 + ((var1 / 0x1000000) & 0xFF)]));
+    uint32_t t4 = hashTable[0x300 + (var2 & 0xFF)] ^ (hashTable[0x200 + ((var2 / 0x100) & 0xFF)] ^ (hashTable[(var2 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((var2 / 0x10000) & 0xFF)]));
+    return std::make_pair(t1, t4);
 }
 
 std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
@@ -232,45 +232,45 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     uint32_t t4;
     uint32_t t1;
     std::pair<uint32_t, uint32_t> result;
+    uint32_t offset = 0x42;
 
-    b0 = b0 ^ magicTable[0x40];
-    b4 = b4 ^ magicTable[0x41];
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x3E];
-    t1 = result.second ^ magicTable[0x3F];
+    b4 = b4 ^ magicTable[--offset];
+    b0 = b0 ^ magicTable[--offset];
+    result = aaa(b4, b0);
+    t1 = result.first ^ magicTable[--offset];
+    t4 = result.second ^ magicTable[--offset];
 
-    uint32_t offset = 0x3E;
     for (int i = 0; i < 3; i++)
     {
-        b8 = b8 ^ (t1 ^ t4);
         bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-        result = aaa(b8, bc);
-        t1 = result.second ^ magicTable[--offset];
-        t4 = result.first ^ magicTable[--offset];
+        b8 = b8 ^ (t1 ^ t4);
+        result = aaa(bc, b8);
+        t1 = result.first ^ magicTable[--offset];
+        t4 = result.second ^ magicTable[--offset];
 
-        b0 = b0 ^ (t1 ^ t4);
         b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-        result = aaa(b0, b4);
-        t1 = result.second ^ magicTable[--offset];
-        t4 = result.first ^ magicTable[--offset];
-
-        b8 = b8 ^ (t1 ^ t4);
-        bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-        result = aaa(b8, bc);
-        t1 = result.second ^ magicTable[--offset];
-        t4 = result.first ^ magicTable[--offset];
-
         b0 = b0 ^ (t1 ^ t4);
-        b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-        result = aaa(b0, b4);
-        t1 = result.second ^ magicTable[--offset];
-        t4 = result.first ^ magicTable[--offset];
+        result = aaa(b4, b0);
+        t1 = result.first ^ magicTable[--offset];
+        t4 = result.second ^ magicTable[--offset];
 
-        b8 = b8 ^ (t1 ^ t4);
         bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-        result = aaa(b8, bc);
-        t1 = result.second ^ magicTable[--offset];
-        t4 = result.first ^ magicTable[--offset];
+        b8 = b8 ^ (t1 ^ t4);
+        result = aaa(bc, b8);
+        t1 = result.first ^ magicTable[--offset];
+        t4 = result.second ^ magicTable[--offset];
+
+        b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        b0 = b0 ^ (t1 ^ t4);
+        result = aaa(b4, b0);
+        t1 = result.first ^ magicTable[--offset];
+        t4 = result.second ^ magicTable[--offset];
+
+        bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        b8 = b8 ^ (t1 ^ t4);
+        result = aaa(bc, b8);
+        t1 = result.first ^ magicTable[--offset];
+        t4 = result.second ^ magicTable[--offset];
 
         b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) / 0x80000000));
         b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[offset - 1] | b4);
@@ -282,35 +282,35 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
         t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[--offset];
     }
 
-    b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t1 = result.second ^ magicTable[0xD];
-    t4 = result.first ^ magicTable[0xC];
+    b8 = b8 ^ (t1 ^ t4);
+    result = aaa(bc, b8);
+    t1 = result.first ^ magicTable[0xD];
+    t4 = result.second ^ magicTable[0xC];
 
-    b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t1 = result.second ^ magicTable[0xB];
-    t4 = result.first ^ magicTable[0xA];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t1 = result.second ^ magicTable[0x9];
-    t4 = result.first ^ magicTable[0x8];
-
     b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t1 = result.second ^ magicTable[0x7];
-    t4 = result.first ^ magicTable[0x6];
+    result = aaa(b4, b0);
+    t1 = result.first ^ magicTable[0xB];
+    t4 = result.second ^ magicTable[0xA];
 
-    b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t1 = result.second;
-    t4 = result.first ^ magicTable[0x4];
+    b8 = b8 ^ (t1 ^ t4);
+    result = aaa(bc, b8);
+    t1 = result.first ^ magicTable[0x9];
+    t4 = result.second ^ magicTable[0x8];
+
+    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+    b0 = b0 ^ (t1 ^ t4);
+    result = aaa(b4, b0);
+    t1 = result.first ^ magicTable[0x7];
+    t4 = result.second ^ magicTable[0x6];
+
+    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+    b8 = b8 ^ (t1 ^ t4);
+    result = aaa(bc, b8);
+    t1 = result.first;
+    t4 = result.second ^ magicTable[0x4];
 
     uint32_t a = b8 ^ magicTable[0x0];
     uint32_t b = bc ^ magicTable[0x1];
