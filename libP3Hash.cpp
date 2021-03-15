@@ -235,7 +235,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     t1 = result.first ^ magicTable[--offset];
     t4 = result.second ^ magicTable[--offset];
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i <= 3; i++)
     {
         bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
         b8 = b8 ^ (t1 ^ t4);
