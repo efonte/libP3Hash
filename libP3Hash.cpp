@@ -239,140 +239,72 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     t4 = result.first ^ magicTable[0x3E];
     t1 = result.second ^ magicTable[0x3F];
 
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x3C];
-    t1 = result.second ^ magicTable[0x3D];
+    uint32_t offset = 0x3E;
+    for (int i = 0; i < 3; i++)
+    {
+        b8 = b8 ^ (t1 ^ t4);
+        bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        result = aaa(b8, bc);
+        t1 = result.second ^ magicTable[--offset];
+        t4 = result.first ^ magicTable[--offset];
 
-    b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x3A];
-    t1 = result.second ^ magicTable[0x3B];
+        b0 = b0 ^ (t1 ^ t4);
+        b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        result = aaa(b0, b4);
+        t1 = result.second ^ magicTable[--offset];
+        t4 = result.first ^ magicTable[--offset];
 
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x38];
-    t1 = result.second ^ magicTable[0x39];
+        b8 = b8 ^ (t1 ^ t4);
+        bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        result = aaa(b8, bc);
+        t1 = result.second ^ magicTable[--offset];
+        t4 = result.first ^ magicTable[--offset];
 
-    b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x36];
-    t1 = result.second ^ magicTable[0x37];
+        b0 = b0 ^ (t1 ^ t4);
+        b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        result = aaa(b0, b4);
+        t1 = result.second ^ magicTable[--offset];
+        t4 = result.first ^ magicTable[--offset];
 
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x34];
-    t1 = result.second ^ magicTable[0x35];
+        b8 = b8 ^ (t1 ^ t4);
+        bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+        result = aaa(b8, bc);
+        t1 = result.second ^ magicTable[--offset];
+        t4 = result.first ^ magicTable[--offset];
 
-    b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[0x32] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[0x32] & (b0 ^ (t1 ^ t4))) / 0x80000000));
-    b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[0x33] | b4);
-    b8 = b8 ^ (magicTable[0x31] | bc);
-    bc = bc ^ (((magicTable[0x30] & b8) * 0x2) + ((magicTable[0x30] & b8) / 0x80000000));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[0x2E];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)])) ^ magicTable[0x2F];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x2C];
-    t1 = result.second ^ magicTable[0x2D];
-
-    b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x2A];
-    t1 = result.second ^ magicTable[0x2B];
+        b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) / 0x80000000));
+        b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[offset - 1] | b4);
+        offset = offset - 2;
+        b8 = b8 ^ (magicTable[--offset] | bc);
+        offset = offset - 1;
+        bc = bc ^ (((magicTable[offset] & b8) * 0x2) + ((magicTable[offset] & b8) / 0x80000000));
+        t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)])) ^ magicTable[--offset];
+        t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[--offset];
+    }
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x28];
-    t1 = result.second ^ magicTable[0x29];
-
-    b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x26];
-    t1 = result.second ^ magicTable[0x27];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x24];
-    t1 = result.second ^ magicTable[0x25];
-
-    b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[0x22] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[0x22] & (b0 ^ (t1 ^ t4))) / 0x80000000));
-    b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[0x23] | b4);
-    b8 = b8 ^ (magicTable[0x21] | bc);
-    bc = bc ^ (((magicTable[0x20] & b8) * 0x2) + ((magicTable[0x20] & b8) / 0x80000000));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[0x1E];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)])) ^ magicTable[0x1F];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x1C];
-    t1 = result.second ^ magicTable[0x1D];
-
-    b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x1A];
-    t1 = result.second ^ magicTable[0x1B];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x18];
-    t1 = result.second ^ magicTable[0x19];
-
-    b0 = b0 ^ (t1 ^ t4);
-    b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x16];
-    t1 = result.second ^ magicTable[0x17];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x14];
-    t1 = result.second ^ magicTable[0x15];
-
-    b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[0x12] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[0x12] & (b0 ^ (t1 ^ t4))) / 0x80000000));
-    b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[0x13] | b4);
-    b8 = b8 ^ (magicTable[0x11] | bc);
-    bc = bc ^ (((magicTable[0x10] & b8) * 0x2) + ((magicTable[0x10] & b8) / 0x80000000));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[0xE];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)])) ^ magicTable[0xF];
-
-    b8 = b8 ^ (t1 ^ t4);
-    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0xC];
     t1 = result.second ^ magicTable[0xD];
+    t4 = result.first ^ magicTable[0xC];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0xA];
     t1 = result.second ^ magicTable[0xB];
+    t4 = result.first ^ magicTable[0xA];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b8, bc);
-    t4 = result.first ^ magicTable[0x8];
     t1 = result.second ^ magicTable[0x9];
+    t4 = result.first ^ magicTable[0x8];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     result = aaa(b0, b4);
-    t4 = result.first ^ magicTable[0x6];
     t1 = result.second ^ magicTable[0x7];
+    t4 = result.first ^ magicTable[0x6];
 
     b8 = b8 ^ (t1 ^ t4);
     t4 = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
