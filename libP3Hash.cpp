@@ -210,6 +210,13 @@ T swap_endian(T u)
     return dest.u;
 }
 
+std::pair<uint32_t, uint32_t> aaa(uint32_t var1, uint32_t var2)
+{
+    uint32_t t4 = (hashTable[0x300 + (var1 & 0xFF)] ^ (hashTable[0x200 + ((var1 / 0x100) & 0xFF)] ^ (hashTable[(var1 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((var1 / 0x10000) & 0xFF)])));
+    uint32_t t1 = (hashTable[0x300 + ((var2 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((var2 / 0x10000) & 0xFF)] ^ (hashTable[var2 & 0xFF] ^ hashTable[0x100 + ((var2 / 0x1000000) & 0xFF)])));
+    return std::make_pair(t4, t1);
+}
+
 std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
 {
     uint32_t b0 = swap_endian<uint32_t>(block[0]);
@@ -224,36 +231,43 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
 
     uint32_t t4;
     uint32_t t1;
+    std::pair<uint32_t, uint32_t> result;
 
     b0 = b0 ^ magicTable[0x40];
     b4 = b4 ^ magicTable[0x41];
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ (hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)]))) ^ magicTable[0x3E];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x3F];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x3E];
+    t1 = result.second ^ magicTable[0x3F];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x3C];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x3D];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x3C];
+    t1 = result.second ^ magicTable[0x3D];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x3A];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x3B];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x3A];
+    t1 = result.second ^ magicTable[0x3B];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x38];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x39];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x38];
+    t1 = result.second ^ magicTable[0x39];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x36];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x37];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x36];
+    t1 = result.second ^ magicTable[0x37];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x34];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x35];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x34];
+    t1 = result.second ^ magicTable[0x35];
 
     b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[0x32] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[0x32] & (b0 ^ (t1 ^ t4))) / 0x80000000));
     b0 = b0 ^ (t1 ^ t4) ^ (magicTable[0x33] | b4);
@@ -264,28 +278,33 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x2C];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x2D];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x2C];
+    t1 = result.second ^ magicTable[0x2D];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x2A];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x2B];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x2A];
+    t1 = result.second ^ magicTable[0x2B];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x28];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x29];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x28];
+    t1 = result.second ^ magicTable[0x29];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x26];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x26];
     t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x27];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x24];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x25];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x24];
+    t1 = result.second ^ magicTable[0x25];
 
     b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[0x22] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[0x22] & (b0 ^ (t1 ^ t4))) / 0x80000000));
     b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[0x23] | b4);
@@ -296,28 +315,33 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x1C];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x1D];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x1C];
+    t1 = result.second ^ magicTable[0x1D];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x1A];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x1A];
     t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x1B];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x18];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x19];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x18];
+    t1 = result.second ^ magicTable[0x19];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x16];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x16];
     t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0x17];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x14];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x15];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x14];
+    t1 = result.second ^ magicTable[0x15];
 
     b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[0x12] & (b0 ^ (t1 ^ t4))) * 0x2) + ((b0 ^ (t1 ^ t4)) / 0x80000000));
     b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[0x13] | b4);
@@ -328,26 +352,30 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0xC];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0xD];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0xC];
+    t1 = result.second ^ magicTable[0xD];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0xA];
-    t1 = (hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]))) ^ magicTable[0xB];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0xA];
+    t1 = result.second ^ magicTable[0xB];
 
     b8 = b8 ^ (t1 ^ t4);
     bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t4 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)])) ^ magicTable[0x8];
-    t1 = (hashTable[0x300 + ((bc / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((bc / 0x10000) & 0xFF)] ^ (hashTable[bc & 0xFF] ^ hashTable[0x100 + ((bc / 0x1000000) & 0xFF)]))) ^ magicTable[0x9];
+    result = aaa(b8, bc);
+    t4 = result.first ^ magicTable[0x8];
+    t1 = result.second ^ magicTable[0x9];
 
     b0 = b0 ^ (t1 ^ t4);
     b4 = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t1 = hashTable[0x300 + ((b4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((b4 / 0x10000) & 0xFF)] ^ (hashTable[b4 & 0xFF] ^ hashTable[0x100 + ((b4 / 0x1000000) & 0xFF)]));
-    t4 = (hashTable[0x300 + (b0 & 0xFF)] ^ (hashTable[0x200 + ((b0 / 0x100) & 0xFF)] ^ hashTable[(b0 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b0 / 0x10000) & 0xFF)])) ^ magicTable[0x6];
+    result = aaa(b0, b4);
+    t4 = result.first ^ magicTable[0x6];
+    t1 = result.second ^ magicTable[0x7];
 
-    b8 = b8 ^ ((t1 ^ magicTable[0x7]) ^ t4);
-    t4 = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ ((t1 ^ magicTable[0x7]) ^ t4));
+    b8 = b8 ^ (t1 ^ t4);
+    t4 = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
     t1 = hashTable[0x300 + ((t4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((t4 / 0x10000) & 0xFF)] ^ (hashTable[t4 & 0xFF] ^ hashTable[0x100 + ((t4 / 0x1000000) & 0xFF)]));
     uint32_t t0 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ (hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)]))) ^ magicTable[0x4];
 
