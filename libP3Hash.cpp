@@ -307,14 +307,15 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     t4 = result.first ^ magicTable[0x6];
 
     b8 = b8 ^ (t1 ^ t4);
-    t4 = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
-    t1 = hashTable[0x300 + ((t4 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((t4 / 0x10000) & 0xFF)] ^ (hashTable[t4 & 0xFF] ^ hashTable[0x100 + ((t4 / 0x1000000) & 0xFF)]));
-    uint32_t t0 = (hashTable[0x300 + (b8 & 0xFF)] ^ (hashTable[0x200 + ((b8 / 0x100) & 0xFF)] ^ (hashTable[(b8 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((b8 / 0x10000) & 0xFF)]))) ^ magicTable[0x4];
+    bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
+    result = aaa(b8, bc);
+    t1 = result.second;
+    t4 = result.first ^ magicTable[0x4];
 
     uint32_t a = b8 ^ magicTable[0x0];
-    uint32_t b = t4 ^ magicTable[0x1];
-    uint32_t c = b0 ^ ((t1 ^ magicTable[0x5]) ^ t0);
-    uint32_t d = b4 ^ (((t0 / 0x100) + (t0 * 0x1000000)) ^ ((t1 ^ magicTable[0x5]) ^ t0));
+    uint32_t b = bc ^ magicTable[0x1];
+    uint32_t c = b0 ^ ((t1 ^ magicTable[0x5]) ^ t4);
+    uint32_t d = b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ ((t1 ^ magicTable[0x5]) ^ t4));
 
     a = swap_endian<uint32_t>(a);
     b = swap_endian<uint32_t>(b);
