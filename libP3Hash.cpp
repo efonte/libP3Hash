@@ -1,9 +1,10 @@
-#include <iostream>
-#include <vector>
 #include <fstream>
+#include <iostream>
 #include <string>
+#include <vector>
+#include <climits> // for CHAR_BIT
 
-using namespace std;
+// using namespace std;
 
 std::vector<uint32_t> magicTable = {
     0xF976DF08, 0x0D9DF076, 0x97F41068, 0x1F4C4EE6, 0x710763C9, 0x433ECFE6,
@@ -192,12 +193,10 @@ std::vector<uint32_t> hashTable = {
     0xE3E300E3, 0xF4F400F4, 0xC7C700C7, 0x9E9E009E};
 
 template <typename T>
-T swap_endian(T u)
-{
+T swap_endian(T u) {
     static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 
-    union
-    {
+    union {
         T u;
         unsigned char u8[sizeof(T)];
     } source, dest;
@@ -228,8 +227,7 @@ uint32_t t5;
 uint32_t t6;
 uint32_t offset = 3;
 
-void aaa()
-{
+void aaa() {
     t3 = t3 ^ hashTable[(0x401 + (((t4 >> 0x18) & 0xFF) << 0x2)) / 4];
     t2 = hashTable[(0x801 + (((t4 >> 0x10) & 0xFF) << 0x2)) / 4];
     t1 = hashTable[(0xC01 + (((t4 >> 0x8) & 0xFF) << 0x2)) / 4];
@@ -241,8 +239,7 @@ void aaa()
     t5 = hashTable[(t2 - 0x8A6A2BB) / 4] ^ (hashTable[((0x8A6AABC + (((t6 >> 0x8) & 0xFF) << 0x2)) - 0x8A6A2BB) / 4] ^ t5);
 }
 
-void ccc()
-{
+void ccc() {
     t2 = _a1_0x0;
     t4 = t5 ^ t4;
     t3 = (t1 ^ t3) ^ t4;
@@ -251,8 +248,7 @@ void ccc()
     t1 = _a1_0x4;
 }
 
-void ddd()
-{
+void ddd() {
     t2 = _a1_0x8;
     t3 = (t1 ^ t3) ^ (t5 ^ t4);
     t1 = t2 ^ t3;
@@ -264,8 +260,8 @@ void ddd()
     _a1_0xC = t4;
     t6 = _a1_0x8;
 }
-std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
-{
+
+std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block) {
     _a1_0x0 = swap_endian<uint32_t>(block[0]);
     _a1_0x4 = swap_endian<uint32_t>(block[1]);
     _a1_0x8 = swap_endian<uint32_t>(block[2]);
@@ -295,8 +291,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t6 = _a1_0x0;
     aaa();
 
-    for (int i = 0; i < 3; i++)
-    {
+    for (int i = 0; i < 3; i++) {
         ddd();
         aaa();
         ccc();
@@ -402,7 +397,7 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     t4 = t1 ^ t2;
     t3 = hashTable[(0x1 + ((t4 & 0xFF) << 0x2)) / 4];
     _a1_0xC = t4;
-    t3 = t3 ^ hashTable[(0x401 + (((t4 >> 0x18) & 0xFF) << 0x2)) / 4]; // aaa();
+    t3 = t3 ^ hashTable[(0x401 + (((t4 >> 0x18) & 0xFF) << 0x2)) / 4];  // aaa();
     t2 = hashTable[(0x801 + (((t4 >> 0x10) & 0xFF) << 0x2)) / 4];
     t1 = 0x8A6AEBC + (((t4 >> 0x8) & 0xFF) << 0x2);
     t3 = t2 ^ t3;
@@ -456,19 +451,17 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block)
     uint32_t c = swap_endian<uint32_t>(_a1_0x8);
     uint32_t d = swap_endian<uint32_t>(_a1_0xC);
 
-    vector<uint32_t> f = {a, b, c, d};
+    std::vector<uint32_t> f = {a, b, c, d};
     return f;
 }
 
-std::pair<uint32_t, uint32_t> decrypt_two_values(uint32_t var1, uint32_t var2)
-{
+std::pair<uint32_t, uint32_t> decrypt_two_values(uint32_t var1, uint32_t var2) {
     uint32_t t1 = hashTable[0x300 + ((var1 / 0x100) & 0xFF)] ^ (hashTable[0x200 + ((var1 / 0x10000) & 0xFF)] ^ (hashTable[var1 & 0xFF] ^ hashTable[0x100 + ((var1 / 0x1000000) & 0xFF)]));
     uint32_t t4 = hashTable[0x300 + (var2 & 0xFF)] ^ (hashTable[0x200 + ((var2 / 0x100) & 0xFF)] ^ (hashTable[(var2 / 0x1000000) & 0xFF] ^ hashTable[0x100 + ((var2 / 0x10000) & 0xFF)]));
     return std::make_pair(t1, t4);
 }
 
-std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
-{
+std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block) {
     uint32_t b0 = swap_endian<uint32_t>(block[0]);
     uint32_t b4 = swap_endian<uint32_t>(block[1]);
     uint32_t b8 = swap_endian<uint32_t>(block[2]);
@@ -485,8 +478,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     t1 = result.first ^ magicTable[--offset];
     t4 = result.second ^ magicTable[--offset];
 
-    for (int i = 0; i <= 3; i++)
-    {
+    for (int i = 0; i <= 3; i++) {
         bc = bc ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4));
         b8 = b8 ^ (t1 ^ t4);
         result = decrypt_two_values(bc, b8);
@@ -517,8 +509,7 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
         t1 = result.first ^ magicTable[--offset];
         t4 = result.second ^ magicTable[--offset];
 
-        if (i != 3)
-        {
+        if (i != 3) {
             b4 = (b4 ^ (((t4 / 0x100) + (t4 * 0x1000000)) ^ (t1 ^ t4))) ^ (((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) * 0x2) + ((magicTable[offset - 2] & (b0 ^ (t1 ^ t4))) / 0x80000000));
             b0 = (b0 ^ (t1 ^ t4)) ^ (magicTable[offset - 1] | b4);
             offset = offset - 2;
@@ -545,85 +536,106 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block)
     return {a, b, c, d};
 }
 
-void encryptFile(std::string in, std::string out)
-{
-    ifstream incheck(in, ios::ate | ios::binary);
-    int insize = incheck.tellg() / 16;
-    incheck.close();
+void encryptFile(std::string in, std::string out) {
 
-    vector<vector<uint32_t>> v_out;
+    // std::ifstream incheck(in, std::ios::ate);
+    // if (!incheck) {
+    //     std::cout << "Cannot open " << in << ", process aborted!\n";
+    //     return;
+    // }
 
-    ifstream infile(in, ios::binary);
-    cout << "Encrypting file..." << endl;
-    for (int i = 0; i < insize; i++)
-    {
+    // int insize = incheck.tellg() / 16;
+    // incheck.close();
+
+    std::ifstream infile(in, std::ios::binary | std::ios::ate);
+    if (!infile) {
+        std::cout << "Cannot open " << in << ", process aborted!\n";
+        return;
+    }
+
+    // std::ofstream outcheck(out, std::ios::trunc);
+    // outcheck.close();
+
+    std::ofstream outfile(out, std::ios::binary | std::ios::trunc);
+    if (!outfile) {
+        std::cout << "Cannot open " << out << ", process aborted!\n";
+    }
+
+    int insize = infile.tellg() / 16;
+    infile.seekg(0);
+
+    std::vector<std::vector<uint32_t>> v_out;
+
+    std::cout << "Encrypting file..." << std::endl;
+    for (int i = 0; i < insize; i++) {
         uint32_t a, b, c, d;
 
-        infile.seekg(i * 16);
         infile.read(reinterpret_cast<char *>(&a), sizeof(uint32_t));
-        infile.seekg(i * 16 + 0x4);
         infile.read(reinterpret_cast<char *>(&b), sizeof(uint32_t));
-        infile.seekg(i * 16 + 0x8);
         infile.read(reinterpret_cast<char *>(&c), sizeof(uint32_t));
-        infile.seekg(i * 16 + 0xC);
         infile.read(reinterpret_cast<char *>(&d), sizeof(uint32_t));
 
-        vector<uint32_t> bl = {a, b, c, d};
+        std::vector<uint32_t> bl = {a, b, c, d};
         bl = encryptBlock(bl);
         v_out.push_back(bl);
 
         if (i % 100000 == 0)
-            cout << i << " of " << insize << endl;
+            std::cout << i << " of " << insize << std::endl;
     }
+
+    // now v_out.size() == insize
+
     if (insize % 100000 != 0)
-        cout << insize << " of " << insize << endl;
+        std::cout << insize << " of " << insize << std::endl;
     infile.close();
 
-    ofstream outcheck(out, ios::trunc);
-    outcheck.close();
-
-    ofstream outfile(out, ios::binary | ios::app);
-    cout << "Saving file..." << endl;
-    for (int i = 0; i < v_out.size(); i++)
-    {
+    
+    std::cout << "Saving file..." << std::endl;
+    for (int i = 0; i < v_out.size(); i++) {
         outfile.write((char *)&v_out[i][0], sizeof(uint32_t));
         outfile.write((char *)&v_out[i][1], sizeof(uint32_t));
         outfile.write((char *)&v_out[i][2], sizeof(uint32_t));
         outfile.write((char *)&v_out[i][3], sizeof(uint32_t));
 
         if (i % 100000 == 0)
-            cout << i << " of " << std::to_string(v_out.size()) << endl;
+            std::cout << i << " of " << std::to_string(v_out.size()) << std::endl; // why std::to_string and why v_out.size()?
     }
+
     if (v_out.size() % 100000 != 0)
-        cout << std::to_string(v_out.size()) << " of " << std::to_string(v_out.size()) << endl;
+        std::cout << std::to_string(v_out.size()) << " of " << std::to_string(v_out.size()) << std::endl;
+    // replace with insize?
 
     outfile.close();
 }
 
-void decryptFile(std::string in, std::string out)
-{
-    ifstream incheck(in, ios::ate | ios::binary);
-    int insize = incheck.tellg() / 16;
-    incheck.close();
+void decryptFile(std::string in, std::string out) {
 
-    vector<vector<uint32_t>> v_out;
+    std::ifstream infile(in, std::ios::binary | std::ios::ate);
+    if (!infile) {
+        std::cout << "Cannot open " << in << ", process aborted!\n";
+        return;
+    }
 
-    ifstream infile(in, ios::binary);
-    cout << "Decrypting file..." << endl;
-    for (int i = 0; i < insize; i++)
-    {
+    std::ofstream outfile(out, std::ios::binary | std::ios::trunc);
+    if (!outfile) {
+        std::cout << "Cannot open " << out << ", process aborted!\n";
+    }
+
+    int insize = infile.tellg() / 16;
+    infile.seekg(0);
+
+    std::vector<std::vector<uint32_t>> v_out;
+
+    std::cout << "Decrypting file..." << std::endl;
+    for (int i = 0; i < insize; i++) {
         uint32_t a, b, c, d;
 
-        infile.seekg(i * 16);
         infile.read(reinterpret_cast<char *>(&a), sizeof(uint32_t));
-        infile.seekg(i * 16 + 0x4);
         infile.read(reinterpret_cast<char *>(&b), sizeof(uint32_t));
-        infile.seekg(i * 16 + 0x8);
         infile.read(reinterpret_cast<char *>(&c), sizeof(uint32_t));
-        infile.seekg(i * 16 + 0xC);
         infile.read(reinterpret_cast<char *>(&d), sizeof(uint32_t));
 
-        vector<uint32_t> bl = {a, b, c, d};
+        std::vector<uint32_t> bl = {a, b, c, d};
 
         if (a + b + c + d != 0x0)
             bl = decryptBlock(bl);
@@ -631,40 +643,54 @@ void decryptFile(std::string in, std::string out)
         v_out.push_back(bl);
 
         if (i % 100000 == 0)
-            cout << i << " of " << insize << endl;
+            std::cout << i << " of " << insize << std::endl;
     }
+
     if (insize % 100000 != 0)
-        cout << insize << " of " << insize << endl;
+        std::cout << insize << " of " << insize << std::endl;
     infile.close();
 
-    ofstream outcheck(out, ios::trunc);
-    outcheck.close();
-
-    ofstream outfile(out, ios::binary | ios::app);
-    cout << "Saving file..." << endl;
-    for (int i = 0; i < v_out.size(); i++)
-    {
+    std::cout << "Saving file..." << std::endl;
+    for (int i = 0; i < v_out.size(); i++) {
         outfile.write((char *)&v_out[i][0], sizeof(uint32_t));
         outfile.write((char *)&v_out[i][1], sizeof(uint32_t));
         outfile.write((char *)&v_out[i][2], sizeof(uint32_t));
         outfile.write((char *)&v_out[i][3], sizeof(uint32_t));
 
         if (i % 100000 == 0)
-            cout << i << " of " << std::to_string(v_out.size()) << endl;
+            std::cout << i << " of " << std::to_string(v_out.size()) << std::endl; // why std::to_string and why v_out.size()?
     }
+
     if (v_out.size() % 100000 != 0)
-        cout << std::to_string(v_out.size()) << " of " << std::to_string(v_out.size()) << endl;
+        std::cout << std::to_string(v_out.size()) << " of " << std::to_string(v_out.size()) << std::endl;
 
     outfile.close();
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // decryptFile("D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND",
     //             "D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND.dec");
-
-    encryptFile("D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND.dec",
-                "D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND");
+    if (argc != 4) {
+        std::cout << "Usage: option input_file output_file, where option is -d (for decryption) or -e (for encryption)\n";
+        return 0;
+    }
+    std::string option(argv[1]);
+    // std::string input(argv[2]), output(argv[3]);
+    if (option == "-e") {
+        std::cout << "Attempting to encrypt " << argv[2] << " and save to " << argv[3] << "\n";
+        encryptFile(argv[2], argv[3]);
+    }
+    else {
+        if (option == "-d") {
+            std::cout << "Attempting to decrypt " << argv[2] << " and save to " << argv[3] << "\n";
+            decryptFile(argv[2], argv[3]);
+        }
+        else {
+            std::cout << "Unknown option " << option << "\n";
+        }
+    }
+    // encryptFile("D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND.dec",
+    //             "D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND");
 
     return 0;
 }

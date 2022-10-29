@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Files for testing
+*.txt
+*.encr
+*.decr
+*.hex
+
+# Vscode settings files
+*.json
