@@ -194,6 +194,7 @@ std::vector<uint32_t> hashTable = {
 
 template <typename T>
 T swap_endian(T u) {
+    // I'm so afraid this is UB...
     static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 
     union {
@@ -538,23 +539,11 @@ std::vector<uint32_t> decryptBlock(std::vector<uint32_t> block) {
 
 void encryptFile(std::string in, std::string out) {
 
-    // std::ifstream incheck(in, std::ios::ate);
-    // if (!incheck) {
-    //     std::cout << "Cannot open " << in << ", process aborted!\n";
-    //     return;
-    // }
-
-    // int insize = incheck.tellg() / 16;
-    // incheck.close();
-
     std::ifstream infile(in, std::ios::binary | std::ios::ate);
     if (!infile) {
         std::cout << "Cannot open " << in << ", process aborted!\n";
         return;
     }
-
-    // std::ofstream outcheck(out, std::ios::trunc);
-    // outcheck.close();
 
     std::ofstream outfile(out, std::ios::binary | std::ios::trunc);
     if (!outfile) {
@@ -592,18 +581,17 @@ void encryptFile(std::string in, std::string out) {
     
     std::cout << "Saving file..." << std::endl;
     for (int i = 0; i < v_out.size(); i++) {
-        outfile.write((char *)&v_out[i][0], sizeof(uint32_t));
-        outfile.write((char *)&v_out[i][1], sizeof(uint32_t));
-        outfile.write((char *)&v_out[i][2], sizeof(uint32_t));
-        outfile.write((char *)&v_out[i][3], sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][0]), sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][1]), sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][2]), sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][3]), sizeof(uint32_t));
 
         if (i % 100000 == 0)
             std::cout << i << " of " << std::to_string(v_out.size()) << std::endl; // why std::to_string and why v_out.size()?
     }
 
-    if (v_out.size() % 100000 != 0)
-        std::cout << std::to_string(v_out.size()) << " of " << std::to_string(v_out.size()) << std::endl;
-    // replace with insize?
+    if (insize % 100000 != 0)
+        std::cout << insize << " of " << insize << std::endl;
 
     outfile.close();
 }
@@ -646,36 +634,35 @@ void decryptFile(std::string in, std::string out) {
             std::cout << i << " of " << insize << std::endl;
     }
 
+    // now v_out.size() == insize
+
     if (insize % 100000 != 0)
         std::cout << insize << " of " << insize << std::endl;
     infile.close();
 
     std::cout << "Saving file..." << std::endl;
     for (int i = 0; i < v_out.size(); i++) {
-        outfile.write((char *)&v_out[i][0], sizeof(uint32_t));
-        outfile.write((char *)&v_out[i][1], sizeof(uint32_t));
-        outfile.write((char *)&v_out[i][2], sizeof(uint32_t));
-        outfile.write((char *)&v_out[i][3], sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][0]), sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][1]), sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][2]), sizeof(uint32_t));
+        outfile.write(reinterpret_cast<char *> (&v_out[i][3]), sizeof(uint32_t));
 
         if (i % 100000 == 0)
-            std::cout << i << " of " << std::to_string(v_out.size()) << std::endl; // why std::to_string and why v_out.size()?
+            std::cout << i << " of " << insize << std::endl;
     }
 
     if (v_out.size() % 100000 != 0)
-        std::cout << std::to_string(v_out.size()) << " of " << std::to_string(v_out.size()) << std::endl;
+        std::cout << insize << " of " << insize << std::endl;
 
     outfile.close();
 }
 
 int main(int argc, char *argv[]) {
-    // decryptFile("D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND",
-    //             "D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND.dec");
     if (argc != 4) {
         std::cout << "Usage: option input_file output_file, where option is -d (for decryption) or -e (for encryption)\n";
         return 0;
     }
     std::string option(argv[1]);
-    // std::string input(argv[2]), output(argv[3]);
     if (option == "-e") {
         std::cout << "Attempting to encrypt " << argv[2] << " and save to " << argv[3] << "\n";
         encryptFile(argv[2], argv[3]);
@@ -689,8 +676,6 @@ int main(int argc, char *argv[]) {
             std::cout << "Unknown option " << option << "\n";
         }
     }
-    // encryptFile("D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND.dec",
-    //             "D:\\Descargas\\LocoRoco2\\libP3Hash-master\\DATAMS.BND");
 
     return 0;
 }
