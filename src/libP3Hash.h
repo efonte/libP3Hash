@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstdint> // for fixed-width integer types
 #include <string>
+#include <climits> // for CHAR_BIT
 
 namespace patapon {
     template <typename T>

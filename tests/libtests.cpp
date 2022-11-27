@@ -1,13 +1,15 @@
 #include <fstream>
 #include <iostream>
 
+#include "libP3Hash.h"
+
 
 bool test_correctness() {
-
+    return true;
 }
 
 bool test_efficiency() {
-
+    return true;
 }
 
 
