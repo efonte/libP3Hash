@@ -32,10 +32,10 @@
 *.app
 
 # Files for testing
-*.txt
-*.encr
-*.decr
-*.hex
+# *.txt
+# *.encr
+# *.decr
+# *.hex
 
 # Vscode settings files
 *.json

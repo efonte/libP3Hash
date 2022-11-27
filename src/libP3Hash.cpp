@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <climits> // for CHAR_BIT
+#include <cstring> // for std::memcpy
 
 #include "libP3Hash.h"
 
@@ -306,10 +307,47 @@ namespace patapon {
         return {a, b, c, d};
     }
 
-    // Not implemented
     std::vector<char> P3Hasher::encryptRawData(std::vector<char> data) {
-        return std::vector<char>();
+        std::vector<std::vector<uint32_t>> v_out;
+        int insize = data.size() / 16;
+
+        for (int i = 0; i < insize; i++) {
+            uint32_t a, b, c, d;
+
+            
+            a = *(reinterpret_cast<uint32_t *>(&data[0 + 16 * i]));
+            b = *(reinterpret_cast<uint32_t *>(&data[4 + 16 * i]));
+            c = *(reinterpret_cast<uint32_t *>(&data[8 + 16 * i]));
+            d = *(reinterpret_cast<uint32_t *>(&data[12 + 16 * i]));
+
+            std::vector<uint32_t> bl = {a, b, c, d};
+            bl = encryptBlock(bl);
+            v_out.push_back(bl);
+
+            // if (i % 100000 == 0)
+            //     std::cout << i << " of " << insize << std::endl;
+        }
+
+        // now v_out.size() == insize
+
+        // if (insize % 100000 != 0)
+        //     std::cout << insize << " of " << insize << std::endl;
+        std::vector <char> output;
+        output.resize(insize * 16);
+
+        for (int i = 0; i < insize; i++) {
+            std::memcpy(&output[16 * i], &v_out[i][0], 16);
+
+            // if (i % 100000 == 0)
+            //     std::cout << i << " of " << insize * 16 << std::endl;
+        }
+
+        // if (insize % 100000 != 0)
+        //     std::cout << insize << " of " << insize << std::endl;
+        return output;
     }
+
+    // Not implemented
     std::vector<char> P3Hasher::decryptRawData(std::vector<char> data) {
         return std::vector<char>();
     }

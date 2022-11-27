@@ -35,6 +35,8 @@ struct CorrectnessTester {
 };
 
 struct EncryptCorrectnessTester : CorrectnessTester {
+    using CorrectnessTester::CorrectnessTester;
+    
     bool Test() override {
         auto res = hasher.encryptRawData(test);
         return memory_ranges_equal(res, correct);
@@ -42,6 +44,7 @@ struct EncryptCorrectnessTester : CorrectnessTester {
 };
 
 struct DecryptCorrectnessTester : CorrectnessTester {
+    using CorrectnessTester::CorrectnessTester;
     bool Test() override {
         auto res = hasher.decryptRawData(test);
         return memory_ranges_equal(res, correct);
@@ -79,7 +82,16 @@ bool test_decryption() {
 }
 
 bool test_correctness() {
-    std::vector <std::pair<std::string, std::string>> samples; // vector of "path to sample, path to answer"
+    std::vector <std::pair<std::string, std::string>> samples; // vector of (path to sample, path to answer)
+
+    samples.emplace_back("test1.txt", "test1.encr");
+    // test1.txt -> test1.encr
+    for (const auto[test_path, ans_path] : samples) {
+        EncryptCorrectnessTester tester(test_path, ans_path);
+        if (!tester.Test()) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -90,7 +102,7 @@ bool test_efficiency() {
 
 int main() {
     // static checks here:
-
+    std::cout << "Starting tests!\n";
     // dynamic checks here:
     std::cout << "Correctness test ";
     if (!test_correctness()) {
