@@ -268,18 +268,6 @@ std::vector<uint32_t> encryptBlock(std::vector<uint32_t> block) {
     _a1_0x8 = swap_endian<uint32_t>(block[2]);
     _a1_0xC = swap_endian<uint32_t>(block[3]);
 
-    // uint32_t a0;
-    // uint32_t a1;
-    // uint32_t a2;
-    // uint32_t a3;
-    // uint32_t v1;
-    // uint32_t t0;
-    // uint32_t t1;
-    // uint32_t t2;
-    // uint32_t t3;
-    // uint32_t t4;
-    // uint32_t t5;
-    // uint32_t t6;
     offset = 3;
 
     a2 = magicTable[0];
