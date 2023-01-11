@@ -14,7 +14,7 @@ add_executable(
 target_link_libraries(TestStart P3Hash)
 
 add_test(
-    NAME TestStart2
+    NAME P3HashTests
     COMMAND TestStart
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )

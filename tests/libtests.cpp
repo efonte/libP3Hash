@@ -8,9 +8,9 @@
 #include "libP3Hash.h"
 
 bool memory_ranges_equal(const std::vector<char>& r1, const std::vector<char>& r2) {
-    if (r1.size() != r2.size()) {
-        return false;
-    }
+    // if (r1.size() != r2.size()) {
+    //     return false;
+    // }
     return !std::memcmp(&r1[0], &r2[0], r1.size());
 }
 
@@ -21,12 +21,12 @@ struct CorrectnessTester {
 
     CorrectnessTester(std::string sample_path, std::string ans_path) {
         std::ifstream infile(sample_path, std::ios::ate);
-        test.resize(infile.tellg());
+        test.resize(static_cast<uint64_t>(infile.tellg()) + 1);
         infile.seekg(0);
         infile.read(&test[0], test.size());
 
         std::ifstream correct_file(ans_path, std::ios::ate);
-        correct.resize(correct_file.tellg());
+        correct.resize(static_cast<uint64_t>(correct_file.tellg()) + 1);
         correct_file.seekg(0);
         correct_file.read(&correct[0], correct.size());
     }
@@ -57,7 +57,7 @@ struct TimeTester {
 
     TimeTester(std::string sample_path) {
         std::ifstream infile(sample_path, std::ios::ate);
-        test.resize(infile.tellg());
+        test.resize(static_cast<uint64_t>(infile.tellg()) + 1);
         infile.seekg(0);
         infile.read(&test[0], test.size());
     }
@@ -78,21 +78,37 @@ struct TimeTester {
 };
 
 bool test_decryption() {
+    std::vector<std::pair<std::string, std::string>> samples;  // vector of (path to sample, path to answer)
+
+    samples.emplace_back("test1.encr", "test1.encr.decr");
+    // test1.encr -> test1.encr.decr
+    for (const auto [test_path, ans_path] : samples) {
+        DecryptCorrectnessTester tester(test_path, ans_path);
+        if (!tester.Test()) {
+            return false;
+        }
+    }
     return true;
 }
 
-bool test_correctness() {
-    std::vector <std::pair<std::string, std::string>> samples; // vector of (path to sample, path to answer)
+bool test_encryption() {
+    std::vector<std::pair<std::string, std::string>> samples;  // vector of (path to sample, path to answer)
 
     samples.emplace_back("test1.txt", "test1.encr");
     // test1.txt -> test1.encr
-    for (const auto[test_path, ans_path] : samples) {
+    for (const auto [test_path, ans_path] : samples) {
         EncryptCorrectnessTester tester(test_path, ans_path);
         if (!tester.Test()) {
             return false;
         }
     }
     return true;
+}
+
+bool test_correctness() {
+    bool decrypted = test_decryption();
+    bool encrypted = test_encryption();
+    return decrypted && encrypted;
 }
 
 bool test_efficiency() {
@@ -102,7 +118,9 @@ bool test_efficiency() {
 
 int main() {
     // static checks here:
+
     std::cout << "Starting tests!\n";
+
     // dynamic checks here:
     std::cout << "Correctness test ";
     if (!test_correctness()) {

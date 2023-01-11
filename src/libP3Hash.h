@@ -9,6 +9,7 @@ namespace patapon {
     template <typename T>
     T swap_endian(T u) {
         // I'm so afraid this is UB...
+        // Maybe we can make this constexpr?
         static_assert(CHAR_BIT == 8, "CHAR_BIT != 8");
 
         union {
