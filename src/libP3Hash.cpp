@@ -5,7 +5,7 @@
 #include <climits> // for CHAR_BIT
 #include <cstring> // for std::memcpy
 
-#include "libP3Hash.h"
+#include "../include/libP3Hash.h"
 
 namespace patapon {
 
@@ -376,6 +376,7 @@ namespace patapon {
         std::ofstream outfile(out, std::ios::binary | std::ios::trunc);
         if (!outfile) {
             std::cout << "Cannot open " << out << ", process aborted!\n";
+            return;
         }
 
         int insize = infile.tellg() / 16;

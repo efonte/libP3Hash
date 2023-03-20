@@ -22,7 +22,7 @@ struct CorrectnessTester {
     std::vector<char> test;
     std::vector<char> correct;
 
-    bool load_tests(std::string sample_path, std::string ans_path) {
+    bool load_tests(const std::string& sample_path, const std::string& ans_path) {
         std::ifstream infile(sample_path, std::ios::ate);
         if (!infile) {
             std::cout << "Cannot find file " << sample_path << "\n";
@@ -72,7 +72,7 @@ struct TimeTester {
     std::vector<char> big_test;
 
 
-    bool load_tests(std::string tests_path) {
+    bool load_tests(const std::string& tests_path) {
         auto path_to_small = tests_path + "/small.raw";
         auto path_to_big = tests_path + "/big.raw";
 
@@ -158,7 +158,7 @@ struct InverseTester {
     patapon::P3Hasher hasher;
     std::vector <char> test;
 
-    bool load_tests(std::string sample_path) {
+    bool load_tests(const std::string& sample_path) {
         std::ifstream infile(sample_path, std::ios::ate);
         if (!infile) {
             std::cout << "Cannot find file " << sample_path << "\n";
@@ -256,6 +256,12 @@ int main() {
     );
     static_assert(
         std::is_assignable<std::vector<char>, decltype(hasher.encryptRawData(std::vector<char>()))>::value
+    );
+    static_assert(
+        std::is_const<decltype(patapon::hashTable)>::value
+    );
+    static_assert(
+        std::is_const<decltype(patapon::magicTable)>::value
     );
 
     std::cout << "Starting tests!\n";
