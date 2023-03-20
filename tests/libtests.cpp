@@ -6,7 +6,7 @@
 #include <filesystem>
 
 
-#include "libP3Hash.h"
+#include "../include/libP3Hash.h"
 
 namespace fs = std::filesystem;
 
@@ -14,7 +14,7 @@ bool memory_ranges_equal(const std::vector<char>& r1, const std::vector<char>& r
     // if (r1.size() != r2.size()) {
     //     return false;
     // }
-    return !std::memcmp(&r1[0], &r2[0], r1.size());
+    return !std::memcmp(&r1[0], &r2[0], r1.size()) || !std::memcmp(&r1[0], &r2[0], r2.size());
 }
 
 struct CorrectnessTester {
@@ -154,6 +154,55 @@ struct TestRunner {
     }
 };
 
+struct InverseTester {
+    patapon::P3Hasher hasher;
+    std::vector <char> test;
+
+    bool load_tests(std::string sample_path) {
+        std::ifstream infile(sample_path, std::ios::ate);
+        if (!infile) {
+            std::cout << "Cannot find file " << sample_path << "\n";
+            return false;
+        }
+
+        test.resize(static_cast<uint64_t>(infile.tellg()) + 1);
+        infile.seekg(0);
+        infile.read(&test[0], test.size());
+        return true;
+    }
+
+    bool Test() {
+        auto decr = hasher.decryptRawData(test);
+        auto encr = hasher.encryptRawData(decr);
+        if (!memory_ranges_equal(test, encr)) return false;
+        encr = hasher.encryptRawData(test);
+        decr = hasher.decryptRawData(encr);
+        return memory_ranges_equal(decr, test);
+    }
+};
+
+struct InverseTestRunner {
+    std::vector <std::string> samples;
+
+    InverseTestRunner(uint32_t test_files_count) {
+        for (uint32_t i = 0; i < test_files_count; ++i) {
+            samples.emplace_back(
+                "res/inverse/" + std::to_string(i) + ".raw"
+            );
+        }
+    }
+    bool Test() {
+        for (const auto& test_path : samples) {
+            InverseTester tester;
+            if (!tester.load_tests(test_path)) return false;
+            if (!tester.Test()) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
 bool test_decryption(uint32_t test_files_count) {
     TestRunner runner(test_files_count);
     return runner.Test<DecryptCorrectnessTester>(true);
@@ -194,6 +243,10 @@ bool test_efficiency() {
     return true;
 }
 
+bool test_inverse(uint32_t test_files_count) {
+    InverseTestRunner runner(test_files_count);
+    return runner.Test();
+}
 
 int main() {
     // static checks here:
@@ -208,9 +261,16 @@ int main() {
     std::cout << "Starting tests!\n";
 
     // dynamic checks here:
-    uint32_t test_files_count = 3;
+    const uint32_t correctness_tests_cnt = 3;
+    const uint32_t inverse_tests_count = 2;
 
-    if (!test_correctness(test_files_count)) {
+    if (!test_inverse(inverse_tests_count)) {
+        std::cout << "Inverse test failed!";
+        return -1;
+    }
+    std::cout << "Inverse test passed!\n";
+
+    if (!test_correctness(correctness_tests_cnt)) {
         std::cout << "Correctness test failed!";
         return -1;
     }
