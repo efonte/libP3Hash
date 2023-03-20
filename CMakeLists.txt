@@ -8,5 +8,5 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${LibP3Hash_SOURCE_DIR}/bin)
 
 enable_testing()
 add_subdirectory(src)
-add_subdirectory(example)
+add_subdirectory(sample)
 add_subdirectory(tests)
