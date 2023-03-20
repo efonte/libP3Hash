@@ -197,11 +197,18 @@ bool test_efficiency() {
 
 int main() {
     // static checks here:
+    patapon::P3Hasher hasher;
+    static_assert(
+        std::is_assignable<std::vector<char>, decltype(hasher.decryptRawData(std::vector<char>()))>::value
+    );
+    static_assert(
+        std::is_assignable<std::vector<char>, decltype(hasher.encryptRawData(std::vector<char>()))>::value
+    );
 
     std::cout << "Starting tests!\n";
 
     // dynamic checks here:
-    uint32_t test_files_count = 2;
+    uint32_t test_files_count = 3;
 
     if (!test_correctness(test_files_count)) {
         std::cout << "Correctness test failed!";
