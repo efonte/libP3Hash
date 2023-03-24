@@ -24,7 +24,7 @@ struct TestSettings {
                      acceptable_big(9000ms) {}
 
     void parse_args(int argc, char* argv[]) {
-        for (uint32_t i = 0; i < argc - 1; ++i) {
+        for (uint32_t i = 1; i < argc - 1; ++i) {
             try {
                 if (argv[i] == std::string("-small")) {
                     auto time = std::chrono::milliseconds(std::atoi(argv[i + 1]));

@@ -7,28 +7,34 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(${P3HashLib_SOURCE_DIR})
 
 add_executable(
-    DebugTests 
+    Tests 
     libtests.cpp
 )
 
-add_executable(
-    ReleaseTests 
-    libtests.cpp
-)
-
-target_link_libraries(DebugTests P3HashShared)
-target_link_libraries(ReleaseTests P3HashShared)
+target_link_libraries(Tests P3HashShared)
 
 add_test(
     NAME P3HashDebugTests
-    COMMAND DebugTests
+    COMMAND Tests
+
+    -small 600
+    -big 9000
+    -inv 2
+    -corr 3
+
     CONFIGURATIONS Debug
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )
 
 add_test(
     NAME P3HashReleaseTests
-    COMMAND ReleaseTests
+    COMMAND Tests
+
+    -small 100
+    -big 1500
+    -inv 2
+    -corr 3
+
     CONFIGURATIONS Release
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests
 )
