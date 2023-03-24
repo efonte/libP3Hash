@@ -23,7 +23,7 @@ struct CorrectnessTester {
     std::vector<char> answer;
     std::vector<char> correct;
 
-    bool load_tests(const std::string& sample_path, const std::string& ans_path) {
+    bool load_tests(const fs::path& sample_path, const fs::path& ans_path) {
         std::ifstream infile(sample_path, std::ios::ate);
         if (!infile) {
             std::cout << "Cannot find file " << sample_path << "\n";
@@ -46,7 +46,7 @@ struct CorrectnessTester {
         return true;
     }
 
-    bool dump_answer(const std::string& wrong_ans_path) {
+    bool dump_answer(const fs::path& wrong_ans_path) {
         std::ofstream outfile(wrong_ans_path);
         if (!outfile) {
             std::cout << "Cannot write to file " << wrong_ans_path << "\n";
@@ -83,9 +83,9 @@ struct TimeTester {
     std::vector<char> big_test;
 
 
-    bool load_tests(const std::string& tests_path) {
-        auto path_to_small = tests_path + "/small.raw";
-        auto path_to_big = tests_path + "/big.raw";
+    bool load_tests(const fs::path& tests_path) {
+        auto path_to_small = tests_path / "small.raw";
+        auto path_to_big = tests_path / "big.raw";
 
         std::ifstream small(path_to_small, std::ios::ate);
         if (!small) {
@@ -138,7 +138,7 @@ struct TimeTester {
 };
 
 struct TestRunner {
-    std::vector<std::pair<std::string, std::string>> samples;
+    std::vector<std::pair<fs::path, fs::path>> samples;
 
     TestRunner(uint32_t test_files_count) {
         for (uint32_t i = 0; i < test_files_count; ++i) {
@@ -159,8 +159,10 @@ struct TestRunner {
             if (!tester.load_tests(test_path, ans_path)) return false;
             if (!tester.Test()) {
                 std::cout << "Test " << test_path << " failed!\n";
-                std::string wrong_ans_path = "wrong-answers/wrong.raw";
-                std::cout << "Dumping wrong answer to '" << wrong_ans_path << "' ...\n";
+
+                const fs::path wrong_ans_path = std::string("wrong-answers" / test_path.filename()) + ".wrong";
+
+                std::cout << "Dumping wrong answer to " << wrong_ans_path << " ...\n";
                 tester.dump_answer(wrong_ans_path);
                 return false;
             }
@@ -173,7 +175,7 @@ struct InverseTester {
     patapon::P3Hasher hasher;
     std::vector <char> test;
 
-    bool load_tests(const std::string& sample_path) {
+    bool load_tests(const fs::path& sample_path) {
         std::ifstream infile(sample_path, std::ios::ate);
         if (!infile) {
             std::cout << "Cannot find file " << sample_path << "\n";
@@ -197,7 +199,7 @@ struct InverseTester {
 };
 
 struct InverseTestRunner {
-    std::vector <std::string> samples;
+    std::vector <fs::path> samples;
 
     InverseTestRunner(uint32_t test_files_count) {
         for (uint32_t i = 0; i < test_files_count; ++i) {
@@ -238,7 +240,9 @@ bool test_efficiency() {
     using namespace std::chrono_literals;
 
     TimeTester tester;
-    if (!tester.load_tests("res/time")) return false;
+    const auto path = fs::path("res/time");
+
+    if (!tester.load_tests(path)) return false;
 
     auto acceptable_small = 500ms;
     auto acceptable_big = 9000ms;
