@@ -9,11 +9,48 @@
 #include "../include/libP3Hash.h"
 
 namespace fs = std::filesystem;
+using namespace std::chrono_literals;
+
+struct TestSettings {
+    uint32_t correctness_tests_count;
+    uint32_t inverse_tests_count;
+
+    std::chrono::milliseconds acceptable_small;
+    std::chrono::milliseconds acceptable_big;
+
+    TestSettings() : correctness_tests_count(3),
+                     inverse_tests_count(2),
+                     acceptable_small(650ms),
+                     acceptable_big(9000ms) {}
+
+    void parse_args(int argc, char* argv[]) {
+        for (uint32_t i = 0; i < argc - 1; ++i) {
+            try {
+                if (argv[i] == std::string("-small")) {
+                    auto time = std::chrono::milliseconds(std::atoi(argv[i + 1]));
+                    acceptable_small = time;
+                } 
+                else if (argv[i] == std::string("-big")) {
+                    auto time = std::chrono::milliseconds(std::atoi(argv[i + 1]));
+                    acceptable_big = time;
+                } 
+                else if (argv[i] == std::string("-inv")) {
+                    auto count = std::atoi(argv[i + 1]);
+                    inverse_tests_count = count;
+                } 
+                else if (argv[i] == std::string("-corr")) {
+                    auto count = std::atoi(argv[i + 1]);
+                    correctness_tests_count = count;
+                }
+            }
+            catch (...) {
+
+            }
+        }
+    }
+};
 
 bool memory_ranges_equal(const std::vector<char>& r1, const std::vector<char>& r2) {
-    // if (r1.size() != r2.size()) {
-    //     return false;
-    // }
     return !std::memcmp(&r1[0], &r2[0], r1.size()) || !std::memcmp(&r1[0], &r2[0], r2.size());
 }
 
@@ -160,7 +197,7 @@ struct TestRunner {
             if (!tester.Test()) {
                 std::cout << "Test " << test_path << " failed!\n";
 
-                const fs::path wrong_ans_path = std::string("wrong-answers" / test_path.filename()) + ".wrong";
+                const fs::path wrong_ans_path = ("wrong-answers" / test_path.filename()).string() + ".wrong";
 
                 std::cout << "Dumping wrong answer to " << wrong_ans_path << " ...\n";
                 tester.dump_answer(wrong_ans_path);
@@ -220,41 +257,36 @@ struct InverseTestRunner {
     }
 };
 
-bool test_decryption(uint32_t test_files_count) {
-    TestRunner runner(test_files_count);
+bool test_decryption(const TestSettings& settings) {
+    TestRunner runner(settings.correctness_tests_count);
     return runner.Test<DecryptCorrectnessTester>(true);
 }
 
-bool test_encryption(uint32_t test_files_count) {
-    TestRunner runner(test_files_count);
+bool test_encryption(const TestSettings& settings) {
+    TestRunner runner(settings.correctness_tests_count);
     return runner.Test<EncryptCorrectnessTester>(false);
 }
 
-bool test_correctness(uint32_t test_files_count) {
-    bool decrypted = test_decryption(test_files_count);
-    bool encrypted = test_encryption(test_files_count);
+bool test_correctness(const TestSettings& settings) {
+    bool decrypted = test_decryption(settings);
+    bool encrypted = test_encryption(settings);
     return decrypted && encrypted;
 }
 
-bool test_efficiency() {
-    using namespace std::chrono_literals;
-
+bool test_efficiency(const TestSettings& settings) {
     TimeTester tester;
     const auto path = fs::path("res/time");
 
     if (!tester.load_tests(path)) return false;
 
-    auto acceptable_small = 500ms;
-    auto acceptable_big = 9000ms;
-
     auto small_time = tester.TestSmall();
-    if (small_time >= acceptable_small) {
+    if (small_time >= settings.acceptable_small) {
         std::cout << "Small test: too long (" + std::to_string(small_time.count()) + ")\n";
         return false;
     }
-    
+
     auto big_time = tester.TestBig();
-    if (big_time >= acceptable_big) {
+    if (big_time >= settings.acceptable_big) {
         std::cout << "Big test: too long (" + std::to_string(big_time.count()) + ")\n";
         return false;
     }
@@ -262,12 +294,14 @@ bool test_efficiency() {
     return true;
 }
 
-bool test_inverse(uint32_t test_files_count) {
-    InverseTestRunner runner(test_files_count);
+bool test_inverse(const TestSettings& settings) {
+    InverseTestRunner runner(settings.inverse_tests_count);
     return runner.Test();
 }
 
-int main() {
+
+
+int main(int argc, char* argv[]) {
     // static checks here:
     patapon::P3Hasher hasher;
     static_assert(
@@ -283,25 +317,25 @@ int main() {
         std::is_const<decltype(patapon::magicTable)>::value
     );
 
+    TestSettings settings;
+    settings.parse_args(argc, argv);
+
     std::cout << "Starting tests!\n";
 
     // dynamic checks here:
-    const uint32_t correctness_tests_cnt = 3;
-    const uint32_t inverse_tests_count = 2;
-
-    if (!test_inverse(inverse_tests_count)) {
+    if (!test_inverse(settings)) {
         std::cout << "Inverse test failed!";
         return -1;
     }
     std::cout << "Inverse test passed!\n";
 
-    if (!test_correctness(correctness_tests_cnt)) {
+    if (!test_correctness(settings)) {
         std::cout << "Correctness test failed!";
         return -1;
     }
     std::cout << "Correctness test passed!\n";
 
-    if (!test_efficiency()) {
+    if (!test_efficiency(settings)) {
         std::cout << "Efficiency test failed!";
         return -1;
     }
