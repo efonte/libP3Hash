@@ -61,7 +61,7 @@ struct CorrectnessTester {
     std::vector<char> correct;
 
     bool load_tests(const fs::path& sample_path, const fs::path& ans_path) {
-        std::ifstream infile(sample_path, std::ios::ate);
+        std::ifstream infile(sample_path, std::ios::ate | std::ios::binary);
         if (!infile) {
             std::cout << "Cannot find file " << sample_path << "\n";
             return false;
@@ -71,7 +71,7 @@ struct CorrectnessTester {
         infile.seekg(0);
         infile.read(&test[0], test.size());
 
-        std::ifstream correct_file(ans_path, std::ios::ate);
+        std::ifstream correct_file(ans_path, std::ios::ate | std::ios::binary);
         if (!correct_file) {
             std::cout << "Cannot find file " << ans_path << "\n";
             return false;
@@ -84,7 +84,7 @@ struct CorrectnessTester {
     }
 
     bool dump_answer(const fs::path& wrong_ans_path) {
-        std::ofstream outfile(wrong_ans_path);
+        std::ofstream outfile(wrong_ans_path, std::ios::binary);
         if (!outfile) {
             std::cout << "Cannot write to file " << wrong_ans_path << "\n";
             return false;
@@ -124,7 +124,7 @@ struct TimeTester {
         auto path_to_small = tests_path / "small.raw";
         auto path_to_big = tests_path / "big.raw";
 
-        std::ifstream small(path_to_small, std::ios::ate);
+        std::ifstream small(path_to_small, std::ios::ate | std::ios::binary);
         if (!small) {
             std::cout << "Cannot find file " << path_to_small << "\n";
             return false;
@@ -134,7 +134,7 @@ struct TimeTester {
         small.seekg(0);
         small.read(&small_test[0], small_test.size());
 
-        std::ifstream big(path_to_big, std::ios::ate);
+        std::ifstream big(path_to_big, std::ios::ate | std::ios::binary);
         if (!big) {
             std::cout << "Cannot find file " << path_to_big << "\n";
             return false;
@@ -213,7 +213,7 @@ struct InverseTester {
     std::vector <char> test;
 
     bool load_tests(const fs::path& sample_path) {
-        std::ifstream infile(sample_path, std::ios::ate);
+        std::ifstream infile(sample_path, std::ios::ate | std::ios::binary);
         if (!infile) {
             std::cout << "Cannot find file " << sample_path << "\n";
             return false;
