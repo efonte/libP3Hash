@@ -20,6 +20,7 @@ bool memory_ranges_equal(const std::vector<char>& r1, const std::vector<char>& r
 struct CorrectnessTester {
     patapon::P3Hasher hasher;
     std::vector<char> test;
+    std::vector<char> answer;
     std::vector<char> correct;
 
     bool load_tests(const std::string& sample_path, const std::string& ans_path) {
@@ -45,6 +46,16 @@ struct CorrectnessTester {
         return true;
     }
 
+    bool dump_answer(const std::string& wrong_ans_path) {
+        std::ofstream outfile(wrong_ans_path);
+        if (!outfile) {
+            std::cout << "Cannot write to file " << wrong_ans_path << "\n";
+            return false;
+        }
+        outfile.write(&answer[0], answer.size());
+        return true;
+    }
+
     virtual bool Test() = 0;
 };
 
@@ -52,8 +63,8 @@ struct EncryptCorrectnessTester : CorrectnessTester {
     //using CorrectnessTester::CorrectnessTester;
     
     bool Test() override {
-        auto res = hasher.encryptRawData(test);
-        return memory_ranges_equal(res, correct);
+        answer = hasher.encryptRawData(test);
+        return memory_ranges_equal(answer, correct);
     }
 };
 
@@ -61,8 +72,8 @@ struct DecryptCorrectnessTester : CorrectnessTester {
     //using CorrectnessTester::CorrectnessTester;
 
     bool Test() override {
-        auto res = hasher.decryptRawData(test);
-        return memory_ranges_equal(res, correct);
+        answer = hasher.decryptRawData(test);
+        return memory_ranges_equal(answer, correct);
     }
 };
 
@@ -147,6 +158,10 @@ struct TestRunner {
             Tester tester;
             if (!tester.load_tests(test_path, ans_path)) return false;
             if (!tester.Test()) {
+                std::cout << "Test " << test_path << " failed!\n";
+                std::string wrong_ans_path = "wrong-answers/wrong.raw";
+                std::cout << "Dumping wrong answer to '" << wrong_ans_path << "' ...\n";
+                tester.dump_answer(wrong_ans_path);
                 return false;
             }
         }
